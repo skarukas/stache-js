@@ -189,7 +189,6 @@ console.log(new configuredInstance._.MyInternalClass().configId);  // 'my-config
 ```
 
 [^1]: Note: extending `stache.Configurable` is not strictly necessary, but it offers a few advantages:
-  1. Static analysis will recognize the `config`, `configId`, and `_` properties ("stache properties").
-  2. Easier bug fixing. An error will be thrown if you try to access the stache properties without adding the class to a `NamespaceTemplate`. Before initialization of the template, these values will be `undefined`.
-
-  If inheriting from `stache.Configurable` is not possible, calling `stache.makeConfigurable(MyClass)` will retain advantage #2.
+    1. Static analysis will recognize the `config`, `configId`, and `_` properties ("stache properties").
+    2. Easier bug fixing. An error will be thrown if you try to access the stache properties without adding the class to a `NamespaceTemplate`. Before initialization of the template, these values will be `undefined`.
+    If inheriting from `stache.Configurable` is not possible, calling `stache.makeConfigurable(MyClass)` will retain advantage #2.
