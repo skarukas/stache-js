@@ -1,10 +1,10 @@
-# stache.js
+# stache-config.js
 
 Lightweight and unobtrusive JS config framework that lets clients create multiple instances of your Javascript library, each with separate configuration / state.
 
-In short, `stache` encapsulates configuration into a namespace instead of passing it to each constructor. By doing so, it also avoids helps avoid global state, instead storing the relevant configuration within the `config` property of each class created on that namespace.
+In short, `stache-config` encapsulates configuration into a namespace instead of passing it to each constructor. By doing so, it also avoids helps avoid global state, instead storing the relevant configuration within the `config` property of each class created on that namespace.
 ```js
-const stache = require('stache')
+const stache = require('stache-config')
 
 // Step 1: Register the namespace while defining your public interface.
 class MyObj extends stache.Configurable {
@@ -76,15 +76,15 @@ const sq = factory.createSquare([x, y])
 const tri = factory.createTriangle([x, y])
 ```
 
-### `stache` -- "Configured Namespace Pattern"
+### `stache-config` -- "Configured Namespace Pattern"
 
-`stache` extends the idea of a factory by generating a namespace with a preset configuration. Multiple namespaces can be created, each with their own local configuration.
+`stache-config` extends the idea of a factory by generating a namespace with a preset configuration. Multiple namespaces can be created, each with their own local configuration.
 
 When the raw class is accessed (that is, not on a namespace), its configuration will be set to a default value specified by the library author, `defaultConfig`.
 
 ```js
 // my-shape-library.js
-const stache = require('stache')
+const stache = require('stache-config')
 
 class Shape extends stache.Configurable {
   constructor(position) {
@@ -160,7 +160,7 @@ A class is made configurable by extending `stache.Configurable`[^1]. Doing so cr
 
 
 ```js
-const stache = require('stache')
+const stache = require('stache-config')
 
 // Registration
 class MyPublicClass extends stache.Configurable {};

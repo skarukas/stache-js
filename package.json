@@ -1,5 +1,5 @@
 {
-  "name": "stache",
+  "name": "stache-config",
   "version": "1.0.0",
   "description": "Lightweight and unobtrusive JS config framework that lets clients create multiple instances of your Javascript library, each with separate configuration / state.",
   "main": "dist/main.js",
@@ -17,7 +17,8 @@
     "state-management",
     "framework",
     "configuration",
-    "namespace"
+    "namespace",
+    "factory"
   ],
   "homepage": "https://github.com/skarukas/stache-js/blob/master/README.md",
   "releases": "https://github.com/skarukas/stache-js/releases",
