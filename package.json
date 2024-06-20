@@ -1,0 +1,36 @@
+{
+  "name": "stache",
+  "version": "1.0.0",
+  "description": "Lightweight and unobtrusive JS config framework that lets clients create multiple instances of your Javascript library, each with separate configuration / state.",
+  "main": "dist/main.js",
+  "module": "dist/main.es.js",
+  "scripts": {
+    "test": "npm run build && node test.js",
+    "lint": "npx eslint --fix src/",
+    "build:es": "rollup src/main.js -o dist/main.es.js -f es",
+    "build:umd": "rollup src/main.js -o dist/main.umd.js -f umd -n stache",
+    "build:cjs": "rollup src/main.js -o dist/main.cjs -f cjs",
+    "build": "npm run lint; npm run build:cjs && npm run build:es && npm run build:umd"
+  },
+  "keywords": [
+    "dependency-injection",
+    "state-management",
+    "framework",
+    "configuration",
+    "namespace"
+  ],
+  "homepage": "https://github.com/skarukas/stache-js/blob/master/README.md",
+  "releases": "https://github.com/skarukas/stache-js/releases",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skarukas/stache-js.git"
+  },
+  "author": "Stephen Karukas <stephen.karukas@gmail.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "eslint": "^9.5.0",
+    "globals": "^15.6.0",
+    "lodash": "^4.17.21"
+  }
+}
