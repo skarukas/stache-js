@@ -46,16 +46,13 @@ function getTestLibrary() {
     MY_GLOBAL_VARIABLE
   }
 
-  const factory = new stache.NamespaceTemplate(
+  const withConfig = stache.registerAndCreateFactoryFn(
     { myFirstConfigItem: 'default', state: [] },
     publicModule,
     { MyInternalConvertedClass }
   )
   // Public library
-  return {
-    ...publicModule,
-    withConfig: (config, id=undefined) => factory.createConfiguration(config, id)
-  }
+  return { ...publicModule, withConfig }
 }
 
 function assertEqual(obj, expected) {

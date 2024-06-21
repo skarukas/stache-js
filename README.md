@@ -12,10 +12,10 @@ class MyObj extends stache.Configurable {
 }
 const defaultConfig = { myProp: 'default' }
 const publicClasses = { MyObj }
-const template = new stache.NamespaceTemplate(defaultConfig, publicClasses)
+const withConfig = stache.registerAndCreateFactoryFn(defaultConfig, publicClasses)
 
 // Step 2: Generate new, custom-configured, namespace(s).
-const n1 = template.createConfiguration({ myProp: 'custom' })
+const n1 = withConfig({ myProp: 'custom' })
 // stache automatically generates namespaces whose classes are identical
 // except for their configuration.
 const plainObj = new MyObj()
@@ -108,17 +108,12 @@ class Triangle extends Shape { shape = 'triangle' }
 const publicClasses = { Square, Triangle }
 const internalClasses = { Shape }
 const defaultConfig = { canvasSelector: "#canvas", lineWidth: 1 }
-// The namespace template.
-const template = new stache.NamespaceTemplate(
+
+const withConfig = stache.registerAndCreateFactoryFn(
   defaultConfig,
   publicClasses,
   internalClasses
 )
-
-// Utility method.
-function withConfig(config, id=undefined) {
-  return template.createConfiguration(config, id)
-}
 
 module.exports = { ...publicModule, withConfig }
 ```
@@ -149,13 +144,13 @@ square2.draw()
 ## Details
 A class is made configurable by extending `stache.Configurable`[^1]. Doing so creates getters for three properties ("stache properties"), which are present on each instance as well as on the class itself:
 - `config`: The configuration of the namespace this class belongs to. This will be either:
-  - The `defaultConfig` passed to the `NamespaceTemplate` constructor (if using the raw class).
-  - The `config` value passed to `myNamespaceTemplate.createConfiguration` (if using the class under a configured namespace)
+  - The `defaultConfig` passed to `registerAndCreateFactoryFn` (if using the raw class).
+  - The `config` value passed to `withConfig` (if using the class under a configured namespace)
 - `_`: The internal namespace that includes all other configurable classes.
   - **NOTE:** To obtain the version of a class that shares the configuration of `this`, you *must* use `this._.MyClass` to access the class instead of just `MyClass`.
 - `configId`: The identifier of the configured namespace that this class belongs to. This will either be:
   - `'default'` if using the raw class instead of the property of a namespace.
-  - The `configId` value passed to `myNamespaceTemplate.createConfiguration` (optional).
+  - The `configId` value passed to `withConfig` (optional).
   - A random UUID, if no `configId` was specified.
 
 
@@ -166,10 +161,10 @@ const stache = require('stache-config')
 class MyPublicClass extends stache.Configurable {};
 class MyInternalClass extends stache.Configurable {};
 const defaultConfig = { myProp: 'default' };
-const template = new stache.NamespaceTemplate(defaultConfig, { MyPublicClass }, { MyInternalClass });
+const withConfig = stache.registerAndCreateFactoryFn(defaultConfig, { MyPublicClass }, { MyInternalClass });
 
 // Usage
-const ns1 = template.createConfiguration({ myProp: 'value1' }, 'my-config');
+const ns1 = withConfig({ myProp: 'value1' }, 'my-config');
 const configuredInstance = new ns1.MyPublicClass();
 
 // Instance properties
@@ -190,6 +185,6 @@ console.log(new configuredInstance._.MyInternalClass().configId);  // 'my-config
 
 [^1]: Note: extending `stache.Configurable` is not strictly necessary, but it offers a few advantages:
     1. Static analysis will recognize the `config`, `configId`, and `_` properties ("stache properties").
-    2. Easier bug fixing. An error will be thrown if you try to access the stache properties without adding the class to a `NamespaceTemplate`. Before initialization of the template, these values will be `undefined`.
+    2. Easier bug fixing. An error will be thrown if you try to access the stache properties without registering the class. Before initialization of the template, these values will be `undefined`.
     
     If inheriting from `stache.Configurable` is not possible, calling `stache.makeConfigurable(MyClass)` will retain advantage #2.

@@ -1,8 +1,8 @@
 {
   "name": "stache-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight and unobtrusive JS config framework that lets clients create multiple instances of your Javascript library, each with separate configuration / state.",
-  "main": "dist/main.js",
+  "main": "dist/main.cjs",
   "module": "dist/main.es.js",
   "scripts": {
     "test": "npm run build && node test.js",

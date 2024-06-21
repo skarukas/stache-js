@@ -78,9 +78,9 @@
    * class MyPublicClass extends stache.Configurable {};
    * class MyInternalClass extends stache.Configurable {};
    * const defaultConfig = { myProp: 'default' };
-   * const template = new stache.NamespaceTemplate(defaultConfig, { MyPublicClass }, { MyInternalClass });
+   * const withConfig = registerAndCreateFactoryFn(defaultConfig, { MyPublicClass }, { MyInternalClass });
    * // Usage
-   * const ns1 = template.createConfiguration({ myProp: 'value1' })
+   * const ns1 = withConfig({ myProp: 'value1' });
    * const configuredCls = new ns1.MyPublicClass();
    * console.log(configuredCls.config);  // { myProp: 'value1' }
    * console.log(configuredCls._);  // { MyInternalClass: ... }
@@ -274,10 +274,59 @@
     }
   }
 
+
+  /**
+   * Register the default config for the namespace and return a function `withConfig` that can be used for generating new configured namespaces.
+   * 
+   * @param {any} defaultConfig The default value to use as the `config` property when the class is accessed in its raw form and not under a namespace.
+   * @param {Object} publicClasses An object containing all the public classes or objects that should be exposed as part of the namespace.
+   * @param {Object} internals An object containing **all** class that require any special `stache` properties. Configured versions of these classes will be available through the `_` property of the configured classes.
+   * 
+   * @returns A function `withConfig(config: Object, configId: string | undefined) -> Object` that creates a namespace where each class has the given `config` and optional `configId`. 
+   * @example
+   * // Registration
+   * class MyPublicClass extends stache.Configurable {};
+   * class MyInternalClass extends stache.Configurable {};
+   * const defaultConfig = { myProp: 'default' };
+   * const withConfig = registerAndCreateFactoryFn(defaultConfig, { MyPublicClass }, { MyInternalClass });
+   * // Usage
+   * const ns1 = withConfig({ myProp: 'value1' });
+   * const configuredCls = new ns1.MyPublicClass();
+   * console.log(configuredCls.config);  // { myProp: 'value1' }
+   * console.log(configuredCls._);  // { MyInternalClass: ... }
+   */
+  function registerAndCreateFactoryFn(defaultConfig, publicClasses, internals = {}) {
+    const namespaceTemplate = new NamespaceTemplate(defaultConfig, publicClasses, internals);
+
+    /**
+     * Generate a namespace where each class's `config` property is set to the passed `config` value.
+     * 
+     * @param {any} config The configuration to store in the namespace. 
+     * @param {string | undefined} configId The identifier to set for the configuration. This will be available on each class's `configId` property. If not set, this will be a random UUID.
+     * @returns {Object} A namespace (object) containing all public classes that were passed to `registerAndCreateFactoryFn`. Each will have a `config` value equal to the first argument to this function.
+     * 
+     * @example
+     * // Registration
+     * class MyPublicClass extends stache.Configurable {};
+     * class MyInternalClass extends stache.Configurable {};
+     * const defaultConfig = { myProp: 'default' };
+     * const withConfig = registerAndCreateFactoryFn(defaultConfig, { MyPublicClass }, { MyInternalClass });
+     * // Usage
+     * const ns1 = withConfig({ myProp: 'value1' });
+     * const configuredCls = new ns1.MyPublicClass();
+     * console.log(configuredCls.config);  // { myProp: 'value1' }
+     * console.log(configuredCls._);  // { MyInternalClass: ... }
+     */
+    return function withConfig(config, configId = undefined) {
+      return namespaceTemplate.createConfiguration(config, configId)
+    }
+  }
+
   var main = {
     makeConfigurable,
     Configurable,
-    NamespaceTemplate
+    NamespaceTemplate,
+    registerAndCreateFactoryFn
   };
 
   return main;
